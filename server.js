@@ -36,7 +36,10 @@ app.post('/addItem', jsonParser, async (request, response) => {
     var body = request.body;
 
     var prom = new Promise((res, rej) => {
-        for (i = 0; i < DB.length; i++) {
+
+        res(DB.find(ele => ele.category === body.category && ele.name === body.name));
+
+        /*for (i = 0; i < DB.length; i++) {
             if (DB[i].category === body.category && DB[i].name === body.name) {
                 code = 201;
                 let pervTotalPrice = parseInt(DB[i].number) * parseInt(DB[i].price)
@@ -47,16 +50,30 @@ app.post('/addItem', jsonParser, async (request, response) => {
                 res("Exists");
             }
         }
-        res("Doesnt Exists");
+        res("Doesnt Exists");*/
     });
     
-    prom.then(value => {
+    /*prom.then(value => {
         if(value === "Doesnt Exists") DB.push(body);
-    })
+    })*/
 
-    response.status(code).send({
-        message: content
-    });
+    prom.then(ele => {
+        if(ele != undefined) {
+            code = 201;
+            let pervTotalPrice = parseInt(ele.number) * parseInt(ele.price)
+            ele.number = parseInt(body.number);
+            ele.price = parseInt(body.price);
+            ele.totalPrice = parseInt(ele.totalPrice) - pervTotalPrice + parseInt(body.totalPrice);
+            content = "Exists";
+        }
+        else {
+            DB.push(body);
+        }
+
+        response.status(code).send({
+            message: content
+        });
+    })
 });
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
