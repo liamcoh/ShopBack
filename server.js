@@ -38,24 +38,7 @@ app.post('/addItem', jsonParser, async (request, response) => {
     var prom = new Promise((res, rej) => {
 
         res(DB.find(ele => ele.category === body.category && ele.name === body.name));
-
-        /*for (i = 0; i < DB.length; i++) {
-            if (DB[i].category === body.category && DB[i].name === body.name) {
-                code = 201;
-                let pervTotalPrice = parseInt(DB[i].number) * parseInt(DB[i].price)
-                DB[i].number = parseInt(body.number);
-                DB[i].price = parseInt(body.price);
-                DB[i].totalPrice = parseInt(DB[i].totalPrice) - pervTotalPrice + parseInt(body.totalPrice);
-                content = "Exists";
-                res("Exists");
-            }
-        }
-        res("Doesnt Exists");*/
     });
-    
-    /*prom.then(value => {
-        if(value === "Doesnt Exists") DB.push(body);
-    })*/
 
     prom.then(ele => {
         if(ele != undefined) {
